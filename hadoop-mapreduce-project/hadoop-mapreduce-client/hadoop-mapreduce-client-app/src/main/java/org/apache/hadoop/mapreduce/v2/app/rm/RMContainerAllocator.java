@@ -1004,11 +1004,13 @@ public class RMContainerAllocator extends RMContainerRequestor
     
     // this method will change the list of allocatedContainers.
     private void assign(List<Container> allocatedContainers) {
+        System.out.println("RMContainerAllocator : assign()");
       Iterator<Container> it = allocatedContainers.iterator();
       LOG.info("Got allocated containers " + allocatedContainers.size());
       containersAllocated += allocatedContainers.size();
       while (it.hasNext()) {
         Container allocated = it.next();
+          System.out.println("Container allocated :" + allocated.toString());
         if (LOG.isDebugEnabled()) {
           LOG.debug("Assigning container " + allocated.getId()
               + " with priority " + allocated.getPriority() + " to NM "
@@ -1113,6 +1115,8 @@ public class RMContainerAllocator extends RMContainerRequestor
     @SuppressWarnings("unchecked")
     private void containerAssigned(Container allocated, 
                                     ContainerRequest assigned) {
+
+        System.out.println("RMContainerAllocator : containerAssigned");
       // Update resource requests
       decContainerReq(assigned);
 
@@ -1136,13 +1140,16 @@ public class RMContainerAllocator extends RMContainerRequestor
     }
     
     private ContainerRequest assignWithoutLocality(Container allocated) {
+        System.out.println("RMContainerAllocator: assignWithoutLocality");
       ContainerRequest assigned = null;
       
       Priority priority = allocated.getPriority();
       if (PRIORITY_FAST_FAIL_MAP.equals(priority)) {
+          System.out.println("RMContainerAllocator: PRIORITY_FAST_FAIL_MAP");
         LOG.info("Assigning container " + allocated + " to fast fail map");
         assigned = assignToFailedMap(allocated);
       } else if (PRIORITY_REDUCE.equals(priority)) {
+          System.out.println("RMContainerAllocator: PRIORITY_REDUCE");
         if (LOG.isDebugEnabled()) {
           LOG.debug("Assigning container " + allocated + " to reduce");
         }
@@ -1153,6 +1160,7 @@ public class RMContainerAllocator extends RMContainerRequestor
     }
         
     private void assignContainers(List<Container> allocatedContainers) {
+        System.out.println("RMConatinerAllocator assignContainers");
       Iterator<Container> it = allocatedContainers.iterator();
       while (it.hasNext()) {
         Container allocated = it.next();
@@ -1167,6 +1175,7 @@ public class RMContainerAllocator extends RMContainerRequestor
     }
     
     private ContainerRequest getContainerReqToReplace(Container allocated) {
+        System.out.println("RMConatinerAllocator ");
       LOG.info("Finding containerReq for allocated container: " + allocated);
       Priority priority = allocated.getPriority();
       ContainerRequest toBeReplaced = null;
@@ -1206,6 +1215,7 @@ public class RMContainerAllocator extends RMContainerRequestor
     
     @SuppressWarnings("unchecked")
     private ContainerRequest assignToFailedMap(Container allocated) {
+        System.out.println("RMContainerAllocator: assignToFailedMap");
       //try to assign to earlierFailedMaps if present
       ContainerRequest assigned = null;
       while (assigned == null && earlierFailedMaps.size() > 0
@@ -1221,10 +1231,12 @@ public class RMContainerAllocator extends RMContainerRequestor
           break;
         }
       }
+        System.out.println("RMContainerAllocator: assignToFailedMap: assigned : " + assigned.toString());
       return assigned;
     }
     
     private ContainerRequest assignToReduce(Container allocated) {
+        System.out.println("RMContainerAllocator: assignToReduce");
       ContainerRequest assigned = null;
       //try to assign to reduces if present
       if (assigned == null && reduces.size() > 0 && canAssignReduces()) {
@@ -1232,6 +1244,7 @@ public class RMContainerAllocator extends RMContainerRequestor
         assigned = reduces.remove(tId);
         LOG.info("Assigned to reduce");
       }
+        System.out.println("RMContainerAllocator: assignToReduce assigned: "+assigned.toString());
       return assigned;
     }
     

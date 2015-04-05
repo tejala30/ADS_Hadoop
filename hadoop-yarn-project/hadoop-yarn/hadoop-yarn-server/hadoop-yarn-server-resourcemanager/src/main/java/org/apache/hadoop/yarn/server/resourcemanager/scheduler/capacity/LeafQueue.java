@@ -1531,6 +1531,7 @@ public class LeafQueue extends AbstractCSQueue {
       ResourceRequest request, NodeType type, RMContainer rmContainer,
       boolean needToUnreserve, MutableObject createdContainer) {
       System.out.println("LeafQueue: assignContainer()");
+      System.out.println("LeafQueue: request " + request.toString());
     if (LOG.isDebugEnabled()) {
       LOG.debug("assignContainers: node=" + node.getNodeName()
         + " application=" + application.getApplicationId()
@@ -1568,8 +1569,13 @@ public class LeafQueue extends AbstractCSQueue {
     // Create the container if necessary
     Container container = 
         getContainer(rmContainer, application, node, capability, priority);
+
+      System.out.println("LeafQueue before adding taskId:" + container.toString());
+      System.out.println("LeafQueue: request getTaskId: " + request.getTaskId());
+    container.setContainerTaskId(request.getTaskId());
+      System.out.println("LeafQueue after adding taskId:" + container.toString());
   
-    // something went wrong getting/creating the container 
+    // something went wrong getting/creating the container
     if (container == null) {
       LOG.warn("Couldn't get container for allocation!");
       return Resources.none();

@@ -19,6 +19,7 @@
 package org.apache.hadoop.yarn.api.records;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import org.apache.hadoop.classification.InterfaceAudience.Public;
 import org.apache.hadoop.classification.InterfaceStability.Evolving;
@@ -76,13 +77,28 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
     return newInstance(priority, hostName, capability, numContainers,
         relaxLocality, null);
   }
-  
+
+//  @Public
+//  @Stable
+//  public static ResourceRequest newInstance(Priority priority, String hostName,
+//      Resource capability, int numContainers, boolean relaxLocality,
+//      String labelExpression) {
+//      System.out.println("ResourceRequest newInstance3");
+//      return newInstance(priority, hostName, capability, numContainers,
+//              relaxLocality, labelExpression, null);
+//  }
+//
+//  @Public
+//  @Stable
+//  public static ResourceRequest newInstance(Priority priority, String hostName,
+//      Resource capability, int numContainers, boolean relaxLocality,
+//      String labelExpression, String taskId) {
   @Public
   @Stable
   public static ResourceRequest newInstance(Priority priority, String hostName,
       Resource capability, int numContainers, boolean relaxLocality,
       String labelExpression) {
-      System.out.println("ResourceRequest newInstance3");
+      System.out.println("ResourceRequest newInstance4");
     ResourceRequest request = Records.newRecord(ResourceRequest.class);
     request.setPriority(priority);
     request.setResourceName(hostName);
@@ -90,6 +106,7 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
     request.setNumContainers(numContainers);
     request.setRelaxLocality(relaxLocality);
     request.setNodeLabelExpression(labelExpression);
+//    request.setTaskId(taskId);
       System.out.println("ResourceRequest newInstance toString");
       System.out.println(request.toString());
     return request;
@@ -156,16 +173,16 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   @Stable
   public abstract void setPriority(Priority priority);
 
-    
+
   
   /**
-   * Get the resource (e.g. <em>host/rack</em>) on which the allocation 
+   * Get the resource (e.g. <em>host/rack</em>) on which the allocation
    * is desired.
-   * 
-   * A special value of <em>*</em> signifies that <em>any</em> resource 
+   *
+   * A special value of <em>*</em> signifies that <em>any</em> resource
    * (host/rack) is acceptable.
-   * 
-   * @return resource (e.g. <em>host/rack</em>) on which the allocation 
+   *
+   * @return resource (e.g. <em>host/rack</em>) on which the allocation
    *                  is desired
    */
   @Public
@@ -218,6 +235,25 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   @Public
   @Stable
   public abstract void setNumContainers(int numContainers);
+
+
+  /**
+   * Get the taskId required with the given specifications.
+   * @return taskId required with the given specifications
+   */
+  @Public
+  @Stable
+  public abstract String getTaskId();
+
+  /**
+   * Set the taskId of containers required with the given specifications
+   * @param taskId of containers required with the given
+   *                      specifications
+   */
+  @Public
+  @Stable
+  public abstract void setTaskId(String taskId);
+
 
   /**
    * Get whether locality relaxation is enabled with this

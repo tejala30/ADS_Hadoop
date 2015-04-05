@@ -47,6 +47,7 @@ public class ContainerPBImpl extends Container {
   private Resource resource = null;
   private Priority priority = null;
   private Token containerToken = null;
+  private String containerTaskId = null;
   
   public ContainerPBImpl() {
     builder = ContainerProto.newBuilder();
@@ -106,6 +107,10 @@ public class ContainerPBImpl extends Container {
             builder.getContainerToken())) {
       builder.setContainerToken(convertToProtoFormat(this.containerToken));
     }
+      if (this.containerTaskId != null
+              && !this.containerTaskId.equals(builder.getContainerTaskId())) {
+          builder.setContainerTaskId(this.containerTaskId);
+      }
   }
 
   private void mergeLocalToProto() {
@@ -182,6 +187,25 @@ public class ContainerPBImpl extends Container {
       return;
     }
     builder.setNodeHttpAddress(nodeHttpAddress);
+  }
+
+
+  @Override
+  public String getContainerTaskId() {
+      ContainerProtoOrBuilder p = viaProto ? proto : builder;
+      System.out.println("ContainerPBImpl getContainerTaskId getContainerTaskId: "+ p.getContainerTaskId());
+      return (p.getContainerTaskId());
+  }
+
+  @Override
+  public void setContainerTaskId(String containerTaskId) {
+      maybeInitBuilder();
+      if (containerTaskId == null) {
+          builder.clearContainerTaskId();
+          return;
+      }
+      this.containerTaskId = containerTaskId;
+      System.out.println("ContainerPBImpl setContainerTaskId this.containerTaskId: "+this.containerTaskId);
   }
 
   @Override
@@ -292,6 +316,8 @@ public class ContainerPBImpl extends Container {
     StringBuilder sb = new StringBuilder();
     sb.append("Container: [");
     sb.append("ContainerId: ").append(getId()).append(", ");
+    sb.append("ContainerTaskId: ").append(getContainerTaskId()).append(", ");
+      sb.append("ContainerTaskId: ").append(this.containerTaskId).append(", ");
     sb.append("NodeId: ").append(getNodeId()).append(", ");
     sb.append("NodeHttpAddress: ").append(getNodeHttpAddress()).append(", ");
     sb.append("Resource: ").append(getResource()).append(", ");

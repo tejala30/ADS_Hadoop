@@ -79,6 +79,15 @@ public abstract class Container implements Comparable<Container> {
     return container;
   }
 
+
+  @Public
+  @Stable
+  public abstract String getContainerTaskId();
+
+  @Private
+  @Unstable
+  public abstract void setContainerTaskId(String containerTaskId);
+
   /**
    * Get the globally unique identifier for the container.
    * @return globally unique identifier for the container

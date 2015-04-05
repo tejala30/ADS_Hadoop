@@ -154,8 +154,31 @@ public class ResourceRequestPBImpl extends  ResourceRequest {
     maybeInitBuilder();
     builder.setNumContainers((numContainers));
   }
-  
+
   @Override
+  public synchronized String getTaskId() {
+      ResourceRequestProtoOrBuilder p = viaProto ? proto : builder;
+      if (!p.hasTaskId()) {
+          return null;
+      }
+      return (p.getTaskId());
+  }
+
+  @Override
+  public synchronized void setTaskId(String taskId) {
+      maybeInitBuilder();
+      ResourceRequestProtoOrBuilder p = viaProto ? proto : builder;
+      String taskIdList = p.getTaskId();
+      if (taskIdList == null || taskIdList.isEmpty()) {
+          taskIdList = taskId;
+      } else {
+          taskIdList = taskIdList + ":" + taskId;
+      }
+      builder.clearTaskId();
+      builder.setTaskId((taskIdList));
+  }
+
+    @Override
   public boolean getRelaxLocality() {
     ResourceRequestProtoOrBuilder p = viaProto ? proto : builder;
     return p.getRelaxLocality();
@@ -186,6 +209,7 @@ public class ResourceRequestPBImpl extends  ResourceRequest {
   @Override
   public String toString() {
     return "{Priority: " + getPriority()
+        + ", TaskId: " + getTaskId()
         + ", Capability: " + getCapability()
         + ", # Containers: " + getNumContainers()
         + ", Location: " + getResourceName()

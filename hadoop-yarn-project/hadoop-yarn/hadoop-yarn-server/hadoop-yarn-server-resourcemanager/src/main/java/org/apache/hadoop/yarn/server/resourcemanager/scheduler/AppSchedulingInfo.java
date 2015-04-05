@@ -135,6 +135,7 @@ public class AppSchedulingInfo {
       System.out.println("AppSchedulingInfo: updateResourceRequests()");
     // Update resource requests
     for (ResourceRequest request : requests) {
+        System.out.println("AppSchedulingInfo ask request: " + request.toString());
       Priority priority = request.getPriority();
       String resourceName = request.getResourceName();
       boolean updatePendingResources = false;
