@@ -399,7 +399,6 @@ public class SchedulerApplicationAttempt {
   
   public synchronized void showRequests() {
     if (LOG.isDebugEnabled()) {
-        System.out.println("SchedulerApplicationAttempt: showRequests");
       for (Priority priority : getPriorities()) {
         Map<String, ResourceRequest> requests = getResourceRequests(priority);
         if (requests != null) {
@@ -409,8 +408,6 @@ public class SchedulerApplicationAttempt {
           for (ResourceRequest request : requests.values()) {
             LOG.debug("showRequests:" + " application=" + getApplicationId()
                 + " request=" + request);
-              System.out.println("showRequests:" + " application=" + getApplicationId()
-                      + " request=" + request);
           }
         }
       }
@@ -427,7 +424,6 @@ public class SchedulerApplicationAttempt {
 
     public ContainersAndNMTokensAllocation(List<Container> containerList,
         List<NMToken> nmTokenList) {
-        System.out.println("SchedulerApplicationAttempt : ContainersAndNMTokensAllocation()");
       this.containerList = containerList;
       this.nmTokenList = nmTokenList;
     }
@@ -446,7 +442,6 @@ public class SchedulerApplicationAttempt {
   // in the newlyAllocatedContainers waiting to be refetched.
   public synchronized ContainersAndNMTokensAllocation
       pullNewlyAllocatedContainersAndNMTokens() {
-      System.out.println("SchedulerApplicationAttempt: pullNewlyAllocatedContainersAndNMTokens");
     List<Container> returnContainerList =
         new ArrayList<Container>(newlyAllocatedContainers.size());
     List<NMToken> nmTokens = new ArrayList<NMToken>();

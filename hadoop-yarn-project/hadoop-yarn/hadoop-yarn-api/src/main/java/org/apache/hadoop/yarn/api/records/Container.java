@@ -175,4 +175,7 @@ public abstract class Container implements Comparable<Container> {
   @Private
   @Unstable
   public abstract void setContainerToken(Token containerToken);
+
+
+  public abstract String toStringContainerTaskList();
 }

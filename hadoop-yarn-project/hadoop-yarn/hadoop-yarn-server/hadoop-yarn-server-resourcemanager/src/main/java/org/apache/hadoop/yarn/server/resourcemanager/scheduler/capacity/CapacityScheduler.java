@@ -865,7 +865,6 @@ public class CapacityScheduler extends
       List<ResourceRequest> ask, List<ContainerId> release, 
       List<String> blacklistAdditions, List<String> blacklistRemovals) {
 
-      System.out.println("CapacityScheduler: allocate");
     FiCaSchedulerApp application = getApplicationAttempt(applicationAttemptId);
     if (application == null) {
       LOG.info("Calling allocate on removed " +
@@ -1042,12 +1041,11 @@ public class CapacityScheduler extends
   }
 
   private synchronized void allocateContainersToNode(FiCaSchedulerNode node) {
-      System.out.println("CapacityScheduler : allocateContainersToNode");
     if (rmContext.isWorkPreservingRecoveryEnabled()
         && !rmContext.isSchedulerReadyForAllocatingContainers()) {
       return;
     }
-
+      System.out.println("CapacityScheduler: allocateContainersToNode()");
     // Assign new containers...
     // 1. Check for reserved applications
     // 2. Schedule if there are no reservations

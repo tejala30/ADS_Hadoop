@@ -217,7 +217,8 @@ public class RMContainerAllocator extends RMContainerRequestor
 
   @Override
   protected void serviceStart() throws Exception {
-      System.out.println("RMContainerAllocator : serviceStart()");
+      System.out.println("RMContainerAllocator: Entering serviceStart()");
+      System.out.println();
     this.eventHandlingThread = new Thread() {
       @SuppressWarnings("unchecked")
       @Override
@@ -254,7 +255,6 @@ public class RMContainerAllocator extends RMContainerRequestor
 
   @Override
   protected synchronized void heartbeat() throws Exception {
-      System.out.println("RMContainerAllocator : heartbeat");
     scheduleStats.updateAndLogIfChanged("Before Scheduling: ");
     List<Container> allocatedContainers = getResources();
     if (allocatedContainers != null && allocatedContainers.size() > 0) {
@@ -337,7 +337,6 @@ public class RMContainerAllocator extends RMContainerRequestor
 
   @SuppressWarnings({ "unchecked" })
   protected synchronized void handleEvent(ContainerAllocatorEvent event) {
-      System.out.println("RMContainerAllocator: handleEvent");
     recalculateReduceSchedule = true;
     if (event.getType() == ContainerAllocator.EventType.CONTAINER_REQ) {
       ContainerRequestEvent reqEvent = (ContainerRequestEvent) event;
@@ -673,7 +672,6 @@ public class RMContainerAllocator extends RMContainerRequestor
   
   @SuppressWarnings("unchecked")
   private List<Container> getResources() throws Exception {
-      System.out.println("RMContainerAllocator: getResources");
     applyConcurrentTaskLimits();
 
     // will be null the first time
@@ -758,7 +756,6 @@ public class RMContainerAllocator extends RMContainerRequestor
 
     if (LOG.isDebugEnabled()) {
       for (Container cont : newContainers) {
-          System.out.println("RMContainerAllocator: getResources: newContainer: " + cont.toString());
         LOG.debug("Received new Container :" + cont);
       }
     }
@@ -985,32 +982,23 @@ public class RMContainerAllocator extends RMContainerRequestor
        }
        request = new ContainerRequest(event, PRIORITY_MAP);
       }
-        System.out.println("*************************************");
-        System.out.println("In addMap attemptID:" + event.getAttemptID() );
-        System.out.println("In addMap taskID:" + event.getAttemptID().getTaskId().getId());
-        System.out.println();
-        System.out.println("In addMap request:" + request.toString());
-        System.out.println("*************************************");
       maps.put(event.getAttemptID(), request);
       addContainerReq(request);
     }
     
     
     void addReduce(ContainerRequest req) {
-        System.out.println("In addReduce request:" + req.toString());
       reduces.put(req.attemptID, req);
       addContainerReq(req);
     }
     
     // this method will change the list of allocatedContainers.
     private void assign(List<Container> allocatedContainers) {
-        System.out.println("RMContainerAllocator : assign()");
       Iterator<Container> it = allocatedContainers.iterator();
       LOG.info("Got allocated containers " + allocatedContainers.size());
       containersAllocated += allocatedContainers.size();
       while (it.hasNext()) {
         Container allocated = it.next();
-          System.out.println("Container allocated :" + allocated.toString());
         if (LOG.isDebugEnabled()) {
           LOG.debug("Assigning container " + allocated.getId()
               + " with priority " + allocated.getPriority() + " to NM "
@@ -1115,8 +1103,6 @@ public class RMContainerAllocator extends RMContainerRequestor
     @SuppressWarnings("unchecked")
     private void containerAssigned(Container allocated, 
                                     ContainerRequest assigned) {
-
-        System.out.println("RMContainerAllocator : containerAssigned");
       // Update resource requests
       decContainerReq(assigned);
 
@@ -1140,27 +1126,22 @@ public class RMContainerAllocator extends RMContainerRequestor
     }
     
     private ContainerRequest assignWithoutLocality(Container allocated) {
-        System.out.println("RMContainerAllocator: assignWithoutLocality");
       ContainerRequest assigned = null;
       
       Priority priority = allocated.getPriority();
       if (PRIORITY_FAST_FAIL_MAP.equals(priority)) {
-          System.out.println("RMContainerAllocator: PRIORITY_FAST_FAIL_MAP");
         LOG.info("Assigning container " + allocated + " to fast fail map");
         assigned = assignToFailedMap(allocated);
       } else if (PRIORITY_REDUCE.equals(priority)) {
-          System.out.println("RMContainerAllocator: PRIORITY_REDUCE");
         if (LOG.isDebugEnabled()) {
           LOG.debug("Assigning container " + allocated + " to reduce");
         }
         assigned = assignToReduce(allocated);
       }
-        
       return assigned;
     }
         
     private void assignContainers(List<Container> allocatedContainers) {
-        System.out.println("RMConatinerAllocator assignContainers");
       Iterator<Container> it = allocatedContainers.iterator();
       while (it.hasNext()) {
         Container allocated = it.next();
@@ -1175,7 +1156,6 @@ public class RMContainerAllocator extends RMContainerRequestor
     }
     
     private ContainerRequest getContainerReqToReplace(Container allocated) {
-        System.out.println("RMConatinerAllocator ");
       LOG.info("Finding containerReq for allocated container: " + allocated);
       Priority priority = allocated.getPriority();
       ContainerRequest toBeReplaced = null;
@@ -1215,7 +1195,6 @@ public class RMContainerAllocator extends RMContainerRequestor
     
     @SuppressWarnings("unchecked")
     private ContainerRequest assignToFailedMap(Container allocated) {
-        System.out.println("RMContainerAllocator: assignToFailedMap");
       //try to assign to earlierFailedMaps if present
       ContainerRequest assigned = null;
       while (assigned == null && earlierFailedMaps.size() > 0
@@ -1231,12 +1210,10 @@ public class RMContainerAllocator extends RMContainerRequestor
           break;
         }
       }
-        System.out.println("RMContainerAllocator: assignToFailedMap: assigned : " + assigned.toString());
       return assigned;
     }
     
     private ContainerRequest assignToReduce(Container allocated) {
-        System.out.println("RMContainerAllocator: assignToReduce");
       ContainerRequest assigned = null;
       //try to assign to reduces if present
       if (assigned == null && reduces.size() > 0 && canAssignReduces()) {
@@ -1244,13 +1221,11 @@ public class RMContainerAllocator extends RMContainerRequestor
         assigned = reduces.remove(tId);
         LOG.info("Assigned to reduce");
       }
-        System.out.println("RMContainerAllocator: assignToReduce assigned: "+assigned.toString());
       return assigned;
     }
     
     @SuppressWarnings("unchecked")
     private void assignMapsWithLocality(List<Container> allocatedContainers) {
-        System.out.println("RMContainer Allocator : assignMapsWithLocality");
       // try to assign to all nodes first to match node local
       Iterator<Container> it = allocatedContainers.iterator();
       while(it.hasNext() && maps.size() > 0 && canAssignMaps()){

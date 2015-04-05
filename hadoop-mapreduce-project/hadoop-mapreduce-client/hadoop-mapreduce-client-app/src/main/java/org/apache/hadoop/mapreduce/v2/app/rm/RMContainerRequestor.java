@@ -190,7 +190,6 @@ public abstract class RMContainerRequestor extends RMCommunicator {
 
   protected AllocateResponse makeRemoteRequest() throws YarnException,
       IOException {
-      System.out.println("RMContainerRequestor : IN makeRemoteRequests");
     applyRequestLimits();
     ResourceBlacklistRequest blacklistRequest =
         ResourceBlacklistRequest.newInstance(new ArrayList<String>(blacklistAdditions),
@@ -199,7 +198,6 @@ public abstract class RMContainerRequestor extends RMCommunicator {
         AllocateRequest.newInstance(lastResponseID,
           super.getApplicationProgress(), new ArrayList<ResourceRequest>(ask),
           new ArrayList<ContainerId>(release), blacklistRequest);
-      System.out.println("RMContainerRequestor: makeRemoteRequests: " + scheduler.getClass().getCanonicalName());
     AllocateResponse allocateResponse = scheduler.allocate(allocateRequest);
     lastResponseID = allocateResponse.getResponseId();
     availableResources = allocateResponse.getAvailableResources();
@@ -390,22 +388,26 @@ public abstract class RMContainerRequestor extends RMCommunicator {
   }
   
   protected void addContainerReq(ContainerRequest req) {
-      System.out.println("RMContainerRequest: In addContainerReq");
-      System.out.println("RMContainerRequest ContainerRequest request: " + req.toString());
+      System.out.println("RMContainerRequest: Entering addContainerReq() [Issue 3 requests for node-local; rack-local and off-switch]");
+      System.out.println("RMContainerRequest: ContainerRequest received: " + req.toString());
+      System.out.println();
     // Create resource requests
     for (String host : req.hosts) {
       // Data-local
       if (!isNodeBlacklisted(host)) {
+          /*MANUAL_CHANGES*/
         addResourceRequest(req.priority, host, req.capability, req.attemptID.getTaskId());
       }      
     }
 
     // Nothing Rack-local for now
     for (String rack : req.racks) {
+        /*MANUAL_CHANGES*/
       addResourceRequest(req.priority, rack, req.capability, req.attemptID.getTaskId());
     }
 
     // Off-switch
+      /*MANUAL_CHANGES*/
     addResourceRequest(req.priority, ResourceRequest.ANY, req.capability, req.attemptID.getTaskId());
   }
 
@@ -422,17 +424,13 @@ public abstract class RMContainerRequestor extends RMCommunicator {
     decResourceRequest(req.priority, ResourceRequest.ANY, req.capability);
   }
 
+    /*MANUAL_CHANGES*/
   private void addResourceRequest(Priority priority, String resourceName,
       Resource capability, TaskId taskId) {
-      System.out.println("RMContainerRequestor: addResourceRequest()");
-      System.out.println("RMContainerRequestor: taskId passed: " + taskId.toString());
-      System.out.println("RMContainerRequestor: taskId passed: " + taskId.getId());
-      System.out.println("RMContainerRequestor: taskId passed: " + taskId.getTaskType());
     Map<String, Map<Resource, ResourceRequest>> remoteRequests =
       this.remoteRequestsTable.get(priority);
 
     if (remoteRequests == null) {
-        System.out.println("RMContainerRequestor: remoteRequests is null");
       remoteRequests = new HashMap<String, Map<Resource, ResourceRequest>>();
       this.remoteRequestsTable.put(priority, remoteRequests);
       if (LOG.isDebugEnabled()) {
@@ -454,7 +452,11 @@ public abstract class RMContainerRequestor extends RMCommunicator {
       reqMap.put(capability, remoteRequest);
     }
     remoteRequest.setNumContainers(remoteRequest.getNumContainers() + 1);
+    /*MANUAL_CHANGES*/
     remoteRequest.setTaskId(taskId.toString());
+      System.out.println("RMContainerRequestor: changed RemoteRequest: " + remoteRequest.toString());
+      System.out.println(remoteRequest.toStringTaskID());
+      System.out.println();
 
 
       // Note this down for next interaction with ResourceManager
@@ -523,8 +525,6 @@ public abstract class RMContainerRequestor extends RMCommunicator {
     // because objects inside the resource map can be deleted ask can end up 
     // containing an object that matches new resource object but with different
     // numContainers. So existing values must be replaced explicitly
-      System.out.println("RMContainerRequestor: addResourceRequestToAsk()");
-      System.out.println("RMContainerRequestor remoteRequest: " + remoteRequest.toString());
     ask.remove(remoteRequest);
     ask.add(remoteRequest);    
   }

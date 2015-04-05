@@ -193,7 +193,6 @@ public class ContainerPBImpl extends Container {
   @Override
   public String getContainerTaskId() {
       ContainerProtoOrBuilder p = viaProto ? proto : builder;
-      System.out.println("ContainerPBImpl getContainerTaskId getContainerTaskId: "+ p.getContainerTaskId());
       return (p.getContainerTaskId());
   }
 
@@ -205,7 +204,6 @@ public class ContainerPBImpl extends Container {
           return;
       }
       this.containerTaskId = containerTaskId;
-      System.out.println("ContainerPBImpl setContainerTaskId this.containerTaskId: "+this.containerTaskId);
   }
 
   @Override
@@ -316,8 +314,7 @@ public class ContainerPBImpl extends Container {
     StringBuilder sb = new StringBuilder();
     sb.append("Container: [");
     sb.append("ContainerId: ").append(getId()).append(", ");
-    sb.append("ContainerTaskId: ").append(getContainerTaskId()).append(", ");
-      sb.append("ContainerTaskId: ").append(this.containerTaskId).append(", ");
+//      sb.append("ContainerTaskId: ").append(getContainerTaskId()).append(", ");
     sb.append("NodeId: ").append(getNodeId()).append(", ");
     sb.append("NodeHttpAddress: ").append(getNodeHttpAddress()).append(", ");
     sb.append("Resource: ").append(getResource()).append(", ");
@@ -325,6 +322,13 @@ public class ContainerPBImpl extends Container {
     sb.append("Token: ").append(getContainerToken()).append(", ");
     sb.append("]");
     return sb.toString();
+  }
+
+  @Override
+  public String toStringContainerTaskList() {
+      String containerTaskList = getContainerTaskId();
+      containerTaskList.replace(":", "\n");
+      return "ContainerTaskID List: \n " + containerTaskList;
   }
 
   //TODO Comparator

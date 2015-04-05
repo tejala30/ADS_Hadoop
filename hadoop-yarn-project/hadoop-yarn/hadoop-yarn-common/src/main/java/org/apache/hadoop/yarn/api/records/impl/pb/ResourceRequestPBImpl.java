@@ -41,14 +41,10 @@ public class ResourceRequestPBImpl extends  ResourceRequest {
   
   
   public ResourceRequestPBImpl() {
-      System.out.println("ResourceRequestPBImpl empty constructor");
-//      System.out.println(this.toString());
-//      System.out.println("%%%%%%%%%%%%%%%%%%%%%%%");
     builder = ResourceRequestProto.newBuilder();
   }
 
   public ResourceRequestPBImpl(ResourceRequestProto proto) {
-      System.out.println("ResourceRequestPBImpl proto constructor");
     this.proto = proto;
     viaProto = true;
   }
@@ -209,11 +205,16 @@ public class ResourceRequestPBImpl extends  ResourceRequest {
   @Override
   public String toString() {
     return "{Priority: " + getPriority()
-        + ", TaskId: " + getTaskId()
         + ", Capability: " + getCapability()
         + ", # Containers: " + getNumContainers()
         + ", Location: " + getResourceName()
         + ", Relax Locality: " + getRelaxLocality() + "}";
+  }
+
+  private String toStringTaskID() {
+      String taskIdList = getTaskId();
+      taskIdList.replace(":", "\n");
+      return "TaskID List: \n " + taskIdList;
   }
 
   @Override

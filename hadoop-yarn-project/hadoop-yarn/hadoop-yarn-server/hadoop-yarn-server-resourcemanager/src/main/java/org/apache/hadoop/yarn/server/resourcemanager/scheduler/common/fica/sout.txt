@@ -1,0 +1,3 @@
+./FiCaSchedulerApp.java:      System.out.println("FiCaSchedulerApp: Entering allocate()");
+./FiCaSchedulerApp.java:      System.out.println("FiCaSchedulerApp: Exiting allocate()");
+./FiCaSchedulerApp.java:      System.out.println("FiCaSchedulerApp: Entering getAllocation");

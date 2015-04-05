@@ -118,8 +118,6 @@ public class ApplicationMasterService extends AbstractService implements
     this.amLivelinessMonitor = rmContext.getAMLivelinessMonitor();
     this.rScheduler = scheduler;
     this.rmContext = rmContext;
-      System.out.println("ApplicationMasterService constructor: yarn scheduler assigned");
-      System.out.println(rScheduler.getClass().getName());
   }
 
   @Override
@@ -167,7 +165,7 @@ public class ApplicationMasterService extends AbstractService implements
                                server.getListenerAddress());
     super.serviceStart();
       System.out.println("ApplicationMasterService serviceStart");
-      System.out.println("Scheduler: " + rScheduler.getClass().getName());
+      System.out.println("Scheduler: " + rScheduler.getClass().getSimpleName());
   }
 
   @Private
@@ -421,7 +419,7 @@ public class ApplicationMasterService extends AbstractService implements
   @Override
   public AllocateResponse allocate(AllocateRequest request)
       throws YarnException, IOException {
-      System.out.println("ApplicationMasterService : allocate");
+      System.out.println("ApplicationMasterService: allocate");
     AMRMTokenIdentifier amrmTokenIdentifier = authorizeRequest();
 
     ApplicationAttemptId appAttemptId =
@@ -478,7 +476,6 @@ public class ApplicationMasterService extends AbstractService implements
           new RMAppAttemptStatusupdateEvent(appAttemptId, request
               .getProgress()));
 
-        System.out.println("ApplicationMasterService: getting ask List");
       List<ResourceRequest> ask = request.getAskList();
       List<ContainerId> release = request.getReleaseList();
 

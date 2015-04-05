@@ -95,7 +95,8 @@ public abstract class ApplicationSubmissionContext {
     amReq.setResourceName(ResourceRequest.ANY);
     amReq.setCapability(resource);
     amReq.setNumContainers(1);
-    amReq.setRelaxLocality(true);
+//    amReq.setRelaxLocality(true);
+    amReq.setRelaxLocality(false);
     amReq.setNodeLabelExpression(amContainerLabelExpression);
     context.setAMContainerResourceRequest(amReq);
     return context;

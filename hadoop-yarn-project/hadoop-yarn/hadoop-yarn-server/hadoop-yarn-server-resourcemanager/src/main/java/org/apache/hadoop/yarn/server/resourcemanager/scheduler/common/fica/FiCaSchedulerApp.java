@@ -131,9 +131,8 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
   }
 
   synchronized public RMContainer allocate(NodeType type, FiCaSchedulerNode node,
-      Priority priority, ResourceRequest request, 
+      Priority priority, ResourceRequest request,
       Container container) {
-      System.out.println("FiCaSchedulerApp: allocate()");
     if (isStopped) {
       return null;
     }
@@ -149,7 +148,6 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
         .getApplicationAttemptId(), node.getNodeID(),
         appSchedulingInfo.getUser(), this.rmContext);
 
-      System.out.println("adding to newlyAllocatedContainers");
     // Add it to allContainers list.
     newlyAllocatedContainers.add(rmContainer);
     liveContainers.put(container.getId(), rmContainer);    
@@ -175,8 +173,8 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
     RMAuditLogger.logSuccess(getUser(), 
         AuditConstants.ALLOC_CONTAINER, "SchedulerApp", 
         getApplicationId(), container.getId());
-    
-    return rmContainer;
+
+      return rmContainer;
   }
 
   public synchronized boolean unreserve(FiCaSchedulerNode node, Priority priority) {
@@ -253,7 +251,6 @@ public class FiCaSchedulerApp extends SchedulerApplicationAttempt {
    */
   public synchronized Allocation getAllocation(ResourceCalculator rc,
       Resource clusterResource, Resource minimumAllocation) {
-      System.out.println("FiCaSchedulerApp: getAllocation");
     Set<ContainerId> currentContPreemption = Collections.unmodifiableSet(
         new HashSet<ContainerId>(containersToPreempt));
     containersToPreempt.clear();

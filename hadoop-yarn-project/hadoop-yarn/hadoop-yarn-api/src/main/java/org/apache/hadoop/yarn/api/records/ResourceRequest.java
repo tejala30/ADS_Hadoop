@@ -65,7 +65,6 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   @Stable
   public static ResourceRequest newInstance(Priority priority, String hostName,
       Resource capability, int numContainers) {
-      System.out.println("ResourceRequest newInstance1");
     return newInstance(priority, hostName, capability, numContainers, true);
   }
 
@@ -73,7 +72,6 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   @Stable
   public static ResourceRequest newInstance(Priority priority, String hostName,
       Resource capability, int numContainers, boolean relaxLocality) {
-      System.out.println("ResourceRequest newInstance2");
     return newInstance(priority, hostName, capability, numContainers,
         relaxLocality, null);
   }
@@ -98,7 +96,6 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   public static ResourceRequest newInstance(Priority priority, String hostName,
       Resource capability, int numContainers, boolean relaxLocality,
       String labelExpression) {
-      System.out.println("ResourceRequest newInstance4");
     ResourceRequest request = Records.newRecord(ResourceRequest.class);
     request.setPriority(priority);
     request.setResourceName(hostName);
@@ -107,8 +104,6 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
     request.setRelaxLocality(relaxLocality);
     request.setNodeLabelExpression(labelExpression);
 //    request.setTaskId(taskId);
-      System.out.println("ResourceRequest newInstance toString");
-      System.out.println(request.toString());
     return request;
   }
 
@@ -321,6 +316,9 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
   @Public
   @Evolving
   public abstract void setNodeLabelExpression(String nodelabelExpression);
+
+
+  public abstract String toStringTaskID();
   
   @Override
   public int hashCode() {

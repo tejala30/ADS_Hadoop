@@ -741,7 +741,7 @@ public class LeafQueue extends AbstractCSQueue {
   public synchronized CSAssignment assignContainers(Resource clusterResource,
       FiCaSchedulerNode node, boolean needToUnreserve,
       ResourceLimits currentResourceLimits) {
-      System.out.println("LeafQueue: assignContainers");
+      System.out.println("LeafQueue: Entering assignContainers()");
     this.currentResourceLimits = currentResourceLimits;
     
     if(LOG.isDebugEnabled()) {
@@ -785,7 +785,6 @@ public class LeafQueue extends AbstractCSQueue {
         for (Priority priority : application.getPriorities()) {
           ResourceRequest anyRequest =
               application.getResourceRequest(priority, ResourceRequest.ANY);
-            System.out.println("application.getResourceRequest anyRequest" + anyRequest.toString());
           if (null == anyRequest) {
             continue;
           }
@@ -881,7 +880,7 @@ public class LeafQueue extends AbstractCSQueue {
       }
       application.showRequests();
     }
-  
+      System.out.println("LeafQueue: Exiting assignContainers()");
     return NULL_ASSIGNMENT;
 
   }
@@ -1243,7 +1242,7 @@ public class LeafQueue extends AbstractCSQueue {
   private CSAssignment assignContainersOnNode(Resource clusterResource,
       FiCaSchedulerNode node, FiCaSchedulerApp application, Priority priority,
       RMContainer reservedContainer, boolean needToUnreserve) {
-      System.out.println("LeafQueue : assignContainersOnNode()");
+      System.out.println("LeafQueue: Entering assignContainersOnNode()");
     Resource assigned = Resources.none();
 
     NodeType requestType = null;
@@ -1320,7 +1319,8 @@ public class LeafQueue extends AbstractCSQueue {
       }
       return new CSAssignment(assigned, NodeType.OFF_SWITCH);
     }
-    
+
+      System.out.println("LeafQueue: Exiting assignContainersOnNode()");
     return SKIP_ASSIGNMENT;
   }
 
@@ -1407,14 +1407,15 @@ public class LeafQueue extends AbstractCSQueue {
       FiCaSchedulerApp application, Priority priority,
       RMContainer reservedContainer, boolean needToUnreserve,
       MutableObject allocatedContainer) {
-      System.out.println("LeafQueue: assignNodeLocalContainers()");
+      System.out.println("LeafQueue: Entering assignNodeLocalContainers()");
     if (canAssign(application, priority, node, NodeType.NODE_LOCAL, 
         reservedContainer)) {
       return assignContainer(clusterResource, node, application, priority,
           nodeLocalResourceRequest, NodeType.NODE_LOCAL, reservedContainer,
           needToUnreserve, allocatedContainer);
     }
-    
+
+      System.out.println("LeafQueue: Exiting assignNodeLocalContainers()");
     return Resources.none();
   }
 
@@ -1423,14 +1424,15 @@ public class LeafQueue extends AbstractCSQueue {
       FiCaSchedulerNode node, FiCaSchedulerApp application, Priority priority,
       RMContainer reservedContainer, boolean needToUnreserve,
       MutableObject allocatedContainer) {
-      System.out.println("LeafQueue: assignRackLocalContainers()");
+      System.out.println("LeafQueue: Entering assignRackLocalContainers()");
     if (canAssign(application, priority, node, NodeType.RACK_LOCAL,
         reservedContainer)) {
       return assignContainer(clusterResource, node, application, priority,
           rackLocalResourceRequest, NodeType.RACK_LOCAL, reservedContainer,
           needToUnreserve, allocatedContainer);
     }
-    
+
+      System.out.println("LeafQueue: Exiting assignRackLocalContainers()");
     return Resources.none();
   }
 
@@ -1439,14 +1441,15 @@ public class LeafQueue extends AbstractCSQueue {
       FiCaSchedulerNode node, FiCaSchedulerApp application, Priority priority, 
       RMContainer reservedContainer, boolean needToUnreserve,
       MutableObject allocatedContainer) {
-      System.out.println("LeafQueue: assignOffSwitchContainers()");
+      System.out.println("LeafQueue: Entering assignOffSwitchContainers()");
     if (canAssign(application, priority, node, NodeType.OFF_SWITCH,
         reservedContainer)) {
       return assignContainer(clusterResource, node, application, priority,
           offSwitchResourceRequest, NodeType.OFF_SWITCH, reservedContainer,
           needToUnreserve, allocatedContainer);
     }
-    
+
+      System.out.println("LeafQueue: Exiting assignOffSwitchContainers()");
     return Resources.none();
   }
 
@@ -1505,14 +1508,13 @@ public class LeafQueue extends AbstractCSQueue {
   private Container getContainer(RMContainer rmContainer,
       FiCaSchedulerApp application, FiCaSchedulerNode node, 
       Resource capability, Priority priority) {
-      System.out.println("LeafQueue: getContainer()");
     return (rmContainer != null) ? rmContainer.getContainer() :
       createContainer(application, node, capability, priority);
   }
 
   Container createContainer(FiCaSchedulerApp application, FiCaSchedulerNode node, 
       Resource capability, Priority priority) {
-      System.out.println("LeafQueue: createContainer()");
+      System.out.println("LeafQueue: Entering createContainer()");
     NodeId nodeId = node.getRMNode().getNodeID();
     ContainerId containerId = BuilderUtils.newContainerId(application
         .getApplicationAttemptId(), application.getNewContainerId());
@@ -1530,8 +1532,10 @@ public class LeafQueue extends AbstractCSQueue {
       FiCaSchedulerApp application, Priority priority, 
       ResourceRequest request, NodeType type, RMContainer rmContainer,
       boolean needToUnreserve, MutableObject createdContainer) {
-      System.out.println("LeafQueue: assignContainer()");
-      System.out.println("LeafQueue: request " + request.toString());
+      System.out.println("LeafQueue: Entering assignContainer()");
+      System.out.println("LeafQueue: Incoming Resource Request " + request.toString());
+      System.out.println(request.toStringTaskID());
+      System.out.println();
     if (LOG.isDebugEnabled()) {
       LOG.debug("assignContainers: node=" + node.getNodeName()
         + " application=" + application.getApplicationId()
@@ -1570,10 +1574,9 @@ public class LeafQueue extends AbstractCSQueue {
     Container container = 
         getContainer(rmContainer, application, node, capability, priority);
 
-      System.out.println("LeafQueue before adding taskId:" + container.toString());
-      System.out.println("LeafQueue: request getTaskId: " + request.getTaskId());
     container.setContainerTaskId(request.getTaskId());
-      System.out.println("LeafQueue after adding taskId:" + container.toString());
+      System.out.println("LeafQueue: Setting Container with TaskID:" + container.toStringContainerTaskList());
+      System.out.println();
   
     // something went wrong getting/creating the container
     if (container == null) {

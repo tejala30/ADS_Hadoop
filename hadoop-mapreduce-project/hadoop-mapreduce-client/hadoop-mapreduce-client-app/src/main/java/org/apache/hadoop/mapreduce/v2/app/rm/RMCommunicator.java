@@ -114,9 +114,8 @@ public abstract class RMCommunicator extends AbstractService
 
   @Override
   protected void serviceStart() throws Exception {
-      System.out.println("RMCommunicator: serviceStart");
+      System.out.println("RMCommunicator: Entering serviceStart");
     scheduler= createSchedulerProxy();
-      System.out.println("RMCommunicator: Scheduler type: " + scheduler.getClass().getCanonicalName());
     JobID id = TypeConverter.fromYarn(this.applicationId);
     JobId jobId = TypeConverter.toYarn(id);
     job = context.getJob(jobId);
@@ -273,7 +272,6 @@ public abstract class RMCommunicator extends AbstractService
   }
 
   protected void startAllocatorThread() {
-      System.out.println("RMCommunicator: startAllocatorThread");
     allocatorThread = new Thread(new Runnable() {
       @Override
       public void run() {
@@ -307,7 +305,6 @@ public abstract class RMCommunicator extends AbstractService
   }
 
   protected ApplicationMasterProtocol createSchedulerProxy() {
-      System.out.println("RMCommunicator: createSchedulerProxy");
     final Configuration conf = getConfig();
 
     try {
