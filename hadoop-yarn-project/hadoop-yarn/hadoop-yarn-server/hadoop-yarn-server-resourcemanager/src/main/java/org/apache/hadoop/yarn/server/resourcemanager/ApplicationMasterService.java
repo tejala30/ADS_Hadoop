@@ -97,6 +97,7 @@ import org.apache.hadoop.yarn.server.security.MasterKeyData;
 import org.apache.hadoop.yarn.server.utils.BuilderUtils;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.apache.hadoop.yarn.util.Records;
 
 @SuppressWarnings("unchecked")
 @Private

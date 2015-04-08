@@ -76,6 +76,7 @@ public abstract class ResourceRequest implements Comparable<ResourceRequest> {
         relaxLocality, null);
   }
 
+
 //  @Public
 //  @Stable
 //  public static ResourceRequest newInstance(Priority priority, String hostName,

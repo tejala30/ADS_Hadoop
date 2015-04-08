@@ -67,6 +67,14 @@ public class AppSchedulingInfo {
       new org.apache.hadoop.yarn.server.resourcemanager.resource.Priority.Comparator());
   final Map<Priority, Map<String, ResourceRequest>> requests =
     new ConcurrentHashMap<Priority, Map<String, ResourceRequest>>();
+
+
+
+//  final Set<Priority> newPriorities = new TreeSet<Priority>(
+//            new org.apache.hadoop.yarn.server.resourcemanager.resource.Priority.Comparator());
+//  final Map<Priority, Map<String, ArrayList<ResourceRequest>>> newRequests =
+//            new ConcurrentHashMap<Priority, Map<String, ArrayList<ResourceRequest>>>();
+
   private Set<String> blacklist = new HashSet<String>();
 
   //private final ApplicationStore store;
@@ -114,6 +122,8 @@ public class AppSchedulingInfo {
   private synchronized void clearRequests() {
     priorities.clear();
     requests.clear();
+//    newPriorities.clear();
+//    newRequests.clear();
     LOG.info("Application " + applicationId + " requests cleared");
   }
 
@@ -158,12 +168,21 @@ public class AppSchedulingInfo {
       }
 
       Map<String, ResourceRequest> asks = this.requests.get(priority);
+//      Map<String, ArrayList<ResourceRequest>> newAsks = this.newRequests.get(priority);
+
 
       if (asks == null) {
         asks = new ConcurrentHashMap<String, ResourceRequest>();
         this.requests.put(priority, asks);
         this.priorities.add(priority);
       }
+
+//      if (newAsks == null) {
+//          newAsks = new ConcurrentHashMap<String, ArrayList<ResourceRequest>>();
+//          this.newRequests.put(priority, newAsks);
+//          this.newPriorities.add(priority);
+//      }
+
       lastRequest = asks.get(resourceName);
 
       if (recoverPreemptedRequest && lastRequest != null) {
@@ -268,6 +287,7 @@ public class AppSchedulingInfo {
       allocateNodeLocal(node, priority, request, container, resourceRequests);
     } else if (type == NodeType.RACK_LOCAL) {
       allocateRackLocal(node, priority, request, container, resourceRequests);
+
     } else {
       allocateOffSwitch(node, priority, request, container, resourceRequests);
     }
@@ -347,6 +367,24 @@ public class AppSchedulingInfo {
     resourceRequests.add(cloneResourceRequest(offRackRequest));
   }
 
+  //TEJALA
+//  synchronized private void newAllocateRackLocal(SchedulerNode node,
+//                                              Priority priority, ResourceRequest rackLocalRequest, Container container,
+//                                              List<ResourceRequest> resourceRequests) {
+//      // Update future requirements
+//      decResourceRequest(node.getRackName(), priority, rackLocalRequest);
+//
+//      ArrayList<ResourceRequest> offRackRequests = newRequests.get(priority).get(
+//              ResourceRequest.ANY);
+//      for (ResourceRequest offRackRequest : offRackRequests) {
+//          decrementOutstanding(offRackRequest);
+//
+//          // Update cloned RackLocal and OffRack requests for recovery
+//          resourceRequests.add(cloneResourceRequest(rackLocalRequest));
+//          resourceRequests.add(cloneResourceRequest(offRackRequest));
+//      }
+//  }
+
   /**
    * The {@link ResourceScheduler} is allocating data-local resources to the
    * application.
@@ -362,6 +400,16 @@ public class AppSchedulingInfo {
     // Update cloned OffRack requests for recovery
     resourceRequests.add(cloneResourceRequest(offSwitchRequest));
   }
+
+  //TEJALA
+//  synchronized private void newAllocateOffSwitch(SchedulerNode node,
+//                                              Priority priority, ResourceRequest offSwitchRequest, Container container,
+//                                              List<ResourceRequest> resourceRequests) {
+//      // Update future requirements
+//      decrementOutstanding(offSwitchRequest);
+//      // Update cloned OffRack requests for recovery
+//      resourceRequests.add(cloneResourceRequest(offSwitchRequest));
+//  }
 
   synchronized private void decrementOutstanding(
       ResourceRequest offSwitchRequest) {
@@ -412,6 +460,30 @@ public class AppSchedulingInfo {
     this.queueName = newQueue.getQueueName();
   }
 
+  //TEJALA
+//  synchronized public void newMove(Queue newQueue) {
+//      QueueMetrics oldMetrics = queue.getMetrics();
+//      QueueMetrics newMetrics = newQueue.getMetrics();
+//      for (Map<String, ArrayList<ResourceRequest>> newAsks : newRequests.values()) {
+//          ArrayList<ResourceRequest> requests = newAsks.get(ResourceRequest.ANY);
+//          for (ResourceRequest request : requests) {
+//              if (request != null) {
+//                  oldMetrics.decrPendingResources(user, request.getNumContainers(),
+//                          request.getCapability());
+//                  newMetrics.incrPendingResources(user, request.getNumContainers(),
+//                          request.getCapability());
+//              }
+//          }
+//      }
+//      oldMetrics.moveAppFrom(this);
+//      newMetrics.moveAppTo(this);
+//      activeUsersManager.deactivateApplication(user, applicationId);
+//      activeUsersManager = newQueue.getActiveUsersManager();
+//      activeUsersManager.activateApplication(user, applicationId);
+//      this.queue = newQueue;
+//      this.queueName = newQueue.getQueueName();
+//  }
+
   synchronized public void stop(RMAppAttemptState rmAppAttemptFinalState) {
     // clear pending resources metrics for the application
     QueueMetrics metrics = queue.getMetrics();
@@ -427,6 +499,25 @@ public class AppSchedulingInfo {
     // Clear requests themselves
     clearRequests();
   }
+
+  //TEJALA
+//  synchronized public void newStop(RMAppAttemptState rmAppAttemptFinalState) {
+//      // clear pending resources metrics for the application
+//      QueueMetrics metrics = queue.getMetrics();
+//      for (Map<String, ArrayList<ResourceRequest>> newAsks : newRequests.values()) {
+//          ArrayList<ResourceRequest> requests = newAsks.get(ResourceRequest.ANY);
+//          for (ResourceRequest request : requests) {
+//              if (request != null) {
+//                  metrics.decrPendingResources(user, request.getNumContainers(),
+//                          request.getCapability());
+//              }
+//          }
+//      }
+//      metrics.finishAppAttempt(applicationId, pending, user);
+//
+//      // Clear requests themselves
+//      clearRequests();
+//  }
 
   public synchronized void setQueue(Queue queue) {
     this.queue = queue;

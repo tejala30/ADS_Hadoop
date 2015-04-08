@@ -997,8 +997,12 @@ public class RMContainerAllocator extends RMContainerRequestor
       Iterator<Container> it = allocatedContainers.iterator();
       LOG.info("Got allocated containers " + allocatedContainers.size());
       containersAllocated += allocatedContainers.size();
+        System.out.println("*************** Allocated Containers ****************");
       while (it.hasNext()) {
         Container allocated = it.next();
+          System.out.println(allocated.toString());
+          System.out.println(allocated.toStringContainerTaskList());
+          System.out.println();
         if (LOG.isDebugEnabled()) {
           LOG.debug("Assigning container " + allocated.getId()
               + " with priority " + allocated.getPriority() + " to NM "

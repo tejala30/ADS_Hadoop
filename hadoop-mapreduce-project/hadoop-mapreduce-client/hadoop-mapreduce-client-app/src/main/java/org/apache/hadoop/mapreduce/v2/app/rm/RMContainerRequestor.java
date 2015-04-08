@@ -388,9 +388,6 @@ public abstract class RMContainerRequestor extends RMCommunicator {
   }
   
   protected void addContainerReq(ContainerRequest req) {
-      System.out.println("RMContainerRequest: Entering addContainerReq() [Issue 3 requests for node-local; rack-local and off-switch]");
-      System.out.println("RMContainerRequest: ContainerRequest received: " + req.toString());
-      System.out.println();
     // Create resource requests
     for (String host : req.hosts) {
       // Data-local
@@ -454,9 +451,6 @@ public abstract class RMContainerRequestor extends RMCommunicator {
     remoteRequest.setNumContainers(remoteRequest.getNumContainers() + 1);
     /*MANUAL_CHANGES*/
     remoteRequest.setTaskId(taskId.toString());
-      System.out.println("RMContainerRequestor: changed RemoteRequest: " + remoteRequest.toString());
-      System.out.println(remoteRequest.toStringTaskID());
-      System.out.println();
 
 
       // Note this down for next interaction with ResourceManager

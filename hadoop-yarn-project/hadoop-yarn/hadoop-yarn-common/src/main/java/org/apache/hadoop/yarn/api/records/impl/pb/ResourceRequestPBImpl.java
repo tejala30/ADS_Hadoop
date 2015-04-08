@@ -211,10 +211,15 @@ public class ResourceRequestPBImpl extends  ResourceRequest {
         + ", Relax Locality: " + getRelaxLocality() + "}";
   }
 
-  private String toStringTaskID() {
+  public String toStringTaskID() {
       String taskIdList = getTaskId();
-      taskIdList.replace(":", "\n");
-      return "TaskID List: \n " + taskIdList;
+      if(taskIdList!=null) {
+          taskIdList = taskIdList.replace(":", "\n");
+          return "TaskID List: \n " + taskIdList;
+      } else {
+          return "TaskID List: \n null";
+      }
+
   }
 
   @Override

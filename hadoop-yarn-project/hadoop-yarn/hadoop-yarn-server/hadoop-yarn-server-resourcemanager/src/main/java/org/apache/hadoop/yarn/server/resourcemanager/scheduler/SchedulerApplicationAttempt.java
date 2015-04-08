@@ -285,6 +285,8 @@ public class SchedulerApplicationAttempt {
     // Cleanup all scheduling information
     isStopped = true;
     appSchedulingInfo.stop(rmAppAttemptFinalState);
+    //TEJALA
+//    appSchedulingInfo.newStop(rmAppAttemptFinalState);
   }
 
   public synchronized boolean isStopped() {
@@ -600,6 +602,8 @@ public class SchedulerApplicationAttempt {
     }
 
     appSchedulingInfo.move(newQueue);
+    //TEJALA
+//    appSchedulingInfo.newMove(newQueue);
     this.queue = newQueue;
   }
 

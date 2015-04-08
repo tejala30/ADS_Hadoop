@@ -193,7 +193,14 @@ public class ContainerPBImpl extends Container {
   @Override
   public String getContainerTaskId() {
       ContainerProtoOrBuilder p = viaProto ? proto : builder;
-      return (p.getContainerTaskId());
+      if (this.containerTaskId != null){
+          return this.containerTaskId;
+      }
+      if(!p.hasContainerTaskId()){
+          return null;
+      }
+      this.containerTaskId = p.getContainerTaskId();
+      return this.getContainerTaskId();
   }
 
   @Override
@@ -327,8 +334,13 @@ public class ContainerPBImpl extends Container {
   @Override
   public String toStringContainerTaskList() {
       String containerTaskList = getContainerTaskId();
-      containerTaskList.replace(":", "\n");
-      return "ContainerTaskID List: \n " + containerTaskList;
+      System.out.println(" toStringContainerTaskList " + containerTaskList);
+      if(containerTaskList != null) {
+          containerTaskList = containerTaskList.replace(":", "\n");
+          return "ContainerTaskID List: \n " + containerTaskList;
+      }else{
+          return "ContainerTaskID List: \n null";
+      }
   }
 
   //TODO Comparator

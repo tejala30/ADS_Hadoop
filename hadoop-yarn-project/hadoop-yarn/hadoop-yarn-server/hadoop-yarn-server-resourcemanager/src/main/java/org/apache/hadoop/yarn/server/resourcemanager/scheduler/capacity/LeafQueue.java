@@ -1533,6 +1533,7 @@ public class LeafQueue extends AbstractCSQueue {
       ResourceRequest request, NodeType type, RMContainer rmContainer,
       boolean needToUnreserve, MutableObject createdContainer) {
       System.out.println("LeafQueue: Entering assignContainer()");
+      System.out.println("*********************** ResourceRequest with TaskID ******************");
       System.out.println("LeafQueue: Incoming Resource Request " + request.toString());
       System.out.println(request.toStringTaskID());
       System.out.println();
@@ -1575,7 +1576,9 @@ public class LeafQueue extends AbstractCSQueue {
         getContainer(rmContainer, application, node, capability, priority);
 
     container.setContainerTaskId(request.getTaskId());
-      System.out.println("LeafQueue: Setting Container with TaskID:" + container.toStringContainerTaskList());
+      System.out.println("*********************** Container with TaskID******************");
+      System.out.println(container.toString());
+      System.out.println(container.toStringContainerTaskList());
       System.out.println();
   
     // something went wrong getting/creating the container
